@@ -1,0 +1,35 @@
+name: Homely cloud Deployer
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Install dependencies
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: install
+      - name: Run unit tests
+        uses: borales/actions-yarn@v2.0.0
+        with:
+          cmd: test
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_HOMELY_CLOUD_ACCESS_KEY }}
+          aws-secret-access-key: ${{ secrets.AWS_HOMELY_CLOUD_SECRET_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
+      - name: Deploy homely cloud stack
+        run: sam deploy --template template.yaml --stack-name $STACK_NAME --s3-bucket $S3_BUCKET --region $REGION --role-arn $ARN --capabilities CAPABILITY_IAM
+        env:
+          STACK_NAME: ${{ secrets.AWS_HOMELY_CLOUD_STACK_NAME }}
+          S3_BUCKET: ${{ secrets.AWS_HOMELY_CLOUD_S3 }}
+          REGION: ${{ secrets.AWS_REGION }}
+          ARN: ${{ secrets.AWS_HOMELY_CLOUD_DEPLOYER_ARN }}
