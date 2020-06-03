@@ -2,18 +2,33 @@
   "name": "hello_world",
   "version": "1.0.0",
   "description": "hello world sample for NodeJS",
-  "main": "hello-world/app.js",
-  "repository": "https://github.com/awslabs/aws-sam-cli/tree/develop/samcli/local/init/templates/cookiecutter-aws-sam-hello-nodejs",
+  "repository": "https://github.com/cjww-development/homely-cloud",
   "author": "SAM CLI",
   "license": "MIT",
   "dependencies": {
-    "axios": "^0.18.0"
+    "@middy/core": "^1.0.0",
+    "@middy/do-not-wait-for-empty-event-loop": "^1.0.0",
+    "@middy/http-error-handler": "^1.0.0",
+    "@middy/http-json-body-parser": "^1.0.0",
+    "@middy/validator": "^1.0.0",
+    "axios": "^0.18.0",
+    "date-fns": "^2.14.0",
+    "db-migrate": "^0.11.11",
+    "db-migrate-mysql": "^2.1.1",
+    "jsonwebtoken": "^8.5.1",
+    "mysql": "^2.18.1",
+    "serverless-mysql": "^1.5.4",
+    "winston": "^3.2.1"
   },
   "scripts": {
-    "test": "mocha test --recursive"
+    "start": "NODE_ENV=local sam local start-api -t template.yaml --skip-pull-image",
+    "test": "jest --verbose false --runInBand",
+    "build-db": "NODE_ENV=local-setup node node_modules/db-migrate/bin/db-migrate up",
+    "teardown-db": "NODE_ENV=local-setup node node_modules/db-migrate/bin/db-migrate down"
   },
   "devDependencies": {
     "chai": "^4.2.0",
+    "jest": "^26.0.1",
     "mocha": "^6.1.4"
   }
 }

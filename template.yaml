@@ -6,26 +6,74 @@ Globals:
   Function:
     Timeout: 3
 
+Parameters:
+  NodeEnv:
+    Type: String
+  NodeRuntime:
+    Type: String
+    Default: 'nodejs12.x'
+
 Resources:
-  HelloWorldFunction:
+  HomelyCloudApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: homely-cloud-dev
+      Auth:
+        Authorizers:
+          CognitoAuthorizer:
+            UserPoolArn: !Sub "{{resolve:secretsmanager:devHomelyCognitoArn}}"
+
+  ViewConfigFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: src/controllers/hello-world.controller
+      Handler: src/controllers/view-config.controller
       Runtime: nodejs12.x
+      Timeout: 900
+      Environment:
+        Variables:
+          NODE_ENV: !Ref 'NodeEnv'
       Events:
-        HelloWorld:
+        ViewConfig:
           Type: Api
           Properties:
-            Path: /hello
+            Path: /config
             Method: get
+            RestApiId: !Ref 'HomelyCloudApiGateway'
+#            Auth:
+#              Authorizer: CognitoAuthorizer
 
-Outputs:
-  HelloWorldApi:
-    Description: "API Gateway endpoint URL for Prod stage for Hello World function"
-    Value: !Sub "https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/hello/"
-  HelloWorldFunction:
-    Description: "Hello World Lambda Function ARN"
-    Value: !GetAtt HelloWorldFunction.Arn
-  HelloWorldFunctionIamRole:
-    Description: "Implicit IAM Role created for Hello World function"
-    Value: !GetAtt HelloWorldFunctionRole.Arn
+  ServiceRegsitrationFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/controllers/server-registration.controller
+      Runtime: nodejs12.x
+      Timeout: 900
+      Environment:
+        Variables:
+          NODE_ENV: !Ref 'NodeEnv'
+      Events:
+        ServiceRegistration:
+          Type: Api
+          Properties:
+            Path: /register-on-premise
+            Method: post
+            RestApiId: !Ref 'HomelyCloudApiGateway'
+
+  PairServerFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: src/controllers/pair-server.controller
+      Runtime: nodejs12.x
+      Timeout: 900
+      Environment:
+        Variables:
+          NODE_ENV: !Ref 'NodeEnv'
+      Events:
+        HomeRegistration:
+          Type: Api
+          Properties:
+            Path: /pair-server
+            Method: post
+            RestApiId: !Ref 'HomelyCloudApiGateway'
+#            Auth:
+#              Authorizer: CognitoAuthorizer

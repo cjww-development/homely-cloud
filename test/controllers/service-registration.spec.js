@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-const testController = require('../../src/controllers/hello-world');
+const testController = require('../../src/controllers/server-registration');
 const chai = require('chai');
 const expect = chai.expect;
 var event, context;
@@ -30,6 +30,6 @@ describe('Tests index', function () {
     let response = JSON.parse(result.body);
 
     expect(response).to.be.an('object');
-    expect(response.message).to.be.equal("hello world");;
+    expect(response.message).to.be.equal("Service registration");
   });
 });

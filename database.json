@@ -1,0 +1,23 @@
+{
+  "defaultEnv" : {
+    "ENV" : "NODE_ENV"
+  },
+
+  "local" : {
+    "host": "host.docker.internal",
+    "driver": "mysql",
+    "user": "root",
+    "password": "root",
+    "database": "homely_cloud_local",
+    "timezone": "utc"
+  },
+
+  "local-setup" : {
+    "host": "localhost",
+    "driver": "mysql",
+    "user": "root",
+    "password": "root",
+    "database": "homely_cloud_local",
+    "timezone": "utc"
+  }
+}

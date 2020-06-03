@@ -14,11 +14,29 @@
  * limitations under the License.
  */
 
-exports.controller = async (event, context) => {
- return {
-   'statusCode': 200,
-   'body': JSON.stringify({
-     message: 'hello world',
-   })
- }
+const middleware = require('../middleware')
+const registrationService = require('../services/servers')
+
+const inputSchema = {
+  type: 'object',
+  properties: {
+    body: {
+      type: 'object',
+      required: ['externalIP', 'internalIP'],
+      properties: {
+        externalIP: {
+          type: 'string'
+        },
+        internalIP: {
+          type: 'string'
+        }
+      }
+    }
+  }
 }
+
+const controller = async (event, context) => {
+  return registrationService.registerOnPremiseServer(event.body)
+}
+
+exports.controller = middleware.run(controller, inputSchema)
