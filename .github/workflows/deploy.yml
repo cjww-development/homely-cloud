@@ -1,9 +1,9 @@
 name: Homely cloud Deployer
 
 on:
-  pull_request:
+  push:
     branches:
-      - master
+      - HOME-8
 
 jobs:
   build:

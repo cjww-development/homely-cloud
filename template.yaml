@@ -21,7 +21,7 @@ Resources:
       Auth:
         Authorizers:
           CognitoAuthorizer:
-            UserPoolArn: !Sub "{{resolve:secretsmanager:devHomelyCognitoArn}}"
+            UserPoolArn: !Sub {{resolve:secretsmanager:devHomelyCognitoArn}}
 
   ViewConfigFunction:
     Type: AWS::Serverless::Function
