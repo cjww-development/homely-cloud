@@ -21,7 +21,7 @@ Resources:
       Auth:
         Authorizers:
           CognitoAuthorizer:
-            UserPoolArn: !Sub 'arn:aws:secretsmanager:${AWS::Region}:${AWS::AccountId}:secret:${NodeEnv}HomelyCognitoArn'
+            UserPoolArn: !Sub '{{resolve:secretsmanager:devHomelyCognitoArn:SecretString:devHomelyCognitoArn}}'
 
   ViewConfigFunction:
     Type: AWS::Serverless::Function
