@@ -27,7 +27,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_HOMELY_CLOUD_SECRET_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
       - name: Deploy homely cloud stack
-        run: sam deploy --template template.yaml --stack-name $STACK_NAME --s3-bucket $S3_BUCKET --region $REGION --role-arn $ARN --capabilities CAPABILITY_IAM --parameter-overrides NodeEnv=dev
+        run: sam deploy --template template.yaml --stack-name $STACK_NAME --s3-bucket $S3_BUCKET --region $REGION --role-arn $ARN --capabilities CAPABILITY_IAM --parameter-overrides NodeEnv=Dev
         env:
           STACK_NAME: ${{ secrets.AWS_HOMELY_CLOUD_STACK_NAME }}
           S3_BUCKET: ${{ secrets.AWS_HOMELY_CLOUD_S3 }}

@@ -32,20 +32,20 @@ Resources:
       Environment:
         Variables:
           NODE_ENV: !Ref 'NodeEnv'
-#      VpcConfig:
-#        SecurityGroupIds:
-#          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSG:SecretString:HomelyCloudVPCSG}}"
-#        SubnetIds:
-#          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdA:SecretString:HomelyCloudVPCSubnetIdA}}"
-#          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdB:SecretString:HomelyCloudVPCSubnetIdB}}"
-#          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdC:SecretString:HomelyCloudVPCSubnetIdC}}"
+      VpcConfig:
+        SecurityGroupIds:
+          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSG:SecretString:HomelyCloudVPCSG}}"
+        SubnetIds:
+          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdA:SecretString:HomelyCloudVPCSubnetIdA}}"
+          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdB:SecretString:HomelyCloudVPCSubnetIdB}}"
+          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdC:SecretString:HomelyCloudVPCSubnetIdC}}"
       Events:
         ViewConfig:
           Type: Api
           Properties:
             Path: /config
             Method: get
-#            RestApiId: !Ref 'HomelyCloudApiGateway'
+            RestApiId: !Ref 'HomelyCloudApiGateway'
 
   ServiceRegsitrationFunction:
     Type: AWS::Serverless::Function
