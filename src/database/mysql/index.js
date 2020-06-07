@@ -17,7 +17,7 @@
 const dbConfig = require('../../../database.json')
 const logger = require('../../lib/logger')
 const mysql = require('mysql')
-// const getParameter = require('../../lib/secrets-loader')
+const getParameter = require('../../lib/secrets-loader')
 
 const serverlessMysql = require('serverless-mysql')({
   backoff: 'decorrelated',
@@ -32,9 +32,9 @@ let configLoaded = false
 const setConfiguration = async () => {
   const env = process.env.NODE_ENV || 'local'
   let config = dbConfig[env]
-  // if(config.sm) {
-  //   config = await getParameter(`RDS${env}`)
-  // }
+  if(config.sm) {
+    config = await getParameter(`RDS${env}`)
+  }
   superConfigFunction(config)
   configLoaded = true
 };
