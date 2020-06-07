@@ -14,9 +14,10 @@
  * limitations under the License.
  */
 
-const dbConfig = require('../../database.json')
-const logger = require('./logger')
+const dbConfig = require('../../../database.json')
+const logger = require('../../lib/logger')
 const mysql = require('mysql')
+// const getParameter = require('../../lib/secrets-loader')
 
 const serverlessMysql = require('serverless-mysql')({
   backoff: 'decorrelated',
@@ -24,15 +25,18 @@ const serverlessMysql = require('serverless-mysql')({
   cap: 200
 })
 
-const superQueryFunction = serverlessMysql.query.bind(serverlessMysql);
-const superConfigFunction = serverlessMysql.config.bind(serverlessMysql);
-let configLoaded = false;
+const superQueryFunction = serverlessMysql.query.bind(serverlessMysql)
+const superConfigFunction = serverlessMysql.config.bind(serverlessMysql)
+let configLoaded = false
 
 const setConfiguration = async () => {
-  const env = process.env.NODE_ENV || 'local';
-  let config = dbConfig[env];
-  superConfigFunction(config);
-  configLoaded = true;
+  const env = process.env.NODE_ENV || 'local'
+  let config = dbConfig[env]
+  // if(config.sm) {
+  //   config = await getParameter(`RDS${env}`)
+  // }
+  superConfigFunction(config)
+  configLoaded = true
 };
 
 serverlessMysql.checkConnection = async () => {
@@ -42,20 +46,20 @@ serverlessMysql.checkConnection = async () => {
     return true
   } catch (e) {
     logger.error('[checkConnection] - There was a problem connecting to the database')
-    await serverlessMysql.quit();
-    await serverlessMysql.connect();
+    await serverlessMysql.quit()
+    await serverlessMysql.connect()
     return false
   }
 }
 
 serverlessMysql.query = async (...args) => {
   if (!configLoaded) {
-    logger.debug('[query] - Configuration not found');
-    await setConfiguration();
-    logger.debug('[query] - Configuration set');
+    logger.debug('[query] - Configuration not found')
+    await setConfiguration()
+    logger.debug('[query] - Configuration set')
   }
-  logger.debug('[query] - Running a query', ...args);
-  return superQueryFunction(...args);
+  logger.debug('[query] - Running a query', ...args)
+  return superQueryFunction(...args)
 };
 
 serverlessMysql.format = (...args) => {

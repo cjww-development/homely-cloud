@@ -14,20 +14,15 @@
  * limitations under the License.
  */
 
-const middleware = require('../middleware')
-const pingService = require('../services/db-ping')
+const mysql = require('../database/mysql')
+const logger = require('../lib/logger')
 
-const controller = async (event, context) => {
-  try {
-    const result = await pingService.pingDb()
-    console.log(result)
-    return {
-      statusCode: 200,
-      body: result
-    }
-  } catch (e) {
-    throw e
-  }
+const pingDb = async () => {
+  logger.info('[ping-db] - Testing DB connection')
+  const result = await mysql.query('select now()')
+  return result
 }
 
-exports.controller = middleware.run(controller, {  })
+module.exports = {
+  pingDb
+}

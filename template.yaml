@@ -32,15 +32,20 @@ Resources:
       Environment:
         Variables:
           NODE_ENV: !Ref 'NodeEnv'
+#      VpcConfig:
+#        SecurityGroupIds:
+#          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSG:SecretString:HomelyCloudVPCSG}}"
+#        SubnetIds:
+#          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdA:SecretString:HomelyCloudVPCSubnetIdA}}"
+#          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdB:SecretString:HomelyCloudVPCSubnetIdB}}"
+#          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdC:SecretString:HomelyCloudVPCSubnetIdC}}"
       Events:
         ViewConfig:
           Type: Api
           Properties:
             Path: /config
             Method: get
-            RestApiId: !Ref 'HomelyCloudApiGateway'
-#            Auth:
-#              Authorizer: CognitoAuthorizer
+#            RestApiId: !Ref 'HomelyCloudApiGateway'
 
   ServiceRegsitrationFunction:
     Type: AWS::Serverless::Function
@@ -51,6 +56,13 @@ Resources:
       Environment:
         Variables:
           NODE_ENV: !Ref 'NodeEnv'
+      VpcConfig:
+        SecurityGroupIds:
+          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSG:SecretString:HomelyCloudVPCSG}}"
+        SubnetIds:
+          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdA:SecretString:HomelyCloudVPCSubnetIdA}}"
+          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdB:SecretString:HomelyCloudVPCSubnetIdB}}"
+          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdC:SecretString:HomelyCloudVPCSubnetIdC}}"
       Events:
         ServiceRegistration:
           Type: Api
@@ -68,6 +80,13 @@ Resources:
       Environment:
         Variables:
           NODE_ENV: !Ref 'NodeEnv'
+      VpcConfig:
+        SecurityGroupIds:
+          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSG:SecretString:HomelyCloudVPCSG}}"
+        SubnetIds:
+          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdA:SecretString:HomelyCloudVPCSubnetIdA}}"
+          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdB:SecretString:HomelyCloudVPCSubnetIdB}}"
+          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdC:SecretString:HomelyCloudVPCSubnetIdC}}"
       Events:
         HomeRegistration:
           Type: Api
@@ -75,5 +94,5 @@ Resources:
             Path: /pair-server
             Method: post
             RestApiId: !Ref 'HomelyCloudApiGateway'
-#            Auth:
-#              Authorizer: CognitoAuthorizer
+            Auth:
+              Authorizer: CognitoAuthorizer

@@ -14,20 +14,19 @@
  * limitations under the License.
  */
 
-const middleware = require('../middleware')
-const pingService = require('../services/db-ping')
+const AWS = require('aws-sdk')
+const ssm = new AWS.SSM({ region: 'eu-west-2' })
+const logger = require('../lib/logger')
 
-const controller = async (event, context) => {
-  try {
-    const result = await pingService.pingDb()
-    console.log(result)
-    return {
-      statusCode: 200,
-      body: result
-    }
-  } catch (e) {
-    throw e
+let config;
+
+module.exports = async parameter => {
+  if(config) {
+    logger.info('[secrets-loader] - Returning cached config')
+    return config
   }
+  logger.info('[secrets-loader] - Fetching config from ssm')
+  const ssmStore = await ssm.getParameter({ Name: parameter, WithDecryption: true })
+  config = ssmStore.parse()
+  return config
 }
-
-exports.controller = middleware.run(controller, {  })
