@@ -27,6 +27,6 @@ module.exports = async parameter => {
   }
   logger.info('[secrets-loader] - Fetching config from ssm')
   const ssmStore = await ssm.getParameter({ Name: parameter, WithDecryption: true })
-  config = ssmStore.parse()
+  config = JSON.parse(ssmStore)
   return config
 }
