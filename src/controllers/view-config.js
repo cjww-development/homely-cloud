@@ -19,13 +19,22 @@ const AWS = require('aws-sdk')
 const ssm = new AWS.SSM({ region: 'eu-west-2' })
 
 const controller = async (event, context) => {
-  return ssm.getParameter({ Name: 'RDSDev', WithDecryption: true }).send((err, data) => {
-    console.log(JSON.stringify(data))
+  try {
+    const secret = await ssm.getParameter({ Name: 'RDSDev', WithDecryption: true }, (err, data) => {
+      if(err) {
+        return err
+      } else {
+        return data
+      }
+    }).promise()
+
     return {
       statusCode: 200,
-      body: JSON.stringify(data)
+      body: JSON.stringify(secret)
     }
-  })
+  } catch (e) {
+
+  }
 }
 
 exports.controller = middleware.run(controller, {  })
