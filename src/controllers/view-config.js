@@ -18,25 +18,21 @@ const middleware = require('../middleware')
 const AWS = require('aws-sdk')
 const ssm = new AWS.SSM({ region: 'eu-west-2' })
 
-const controller = async (event, context) => {
-  try {
-    const secret = await ssm.getParameter({ Name: 'RDSDev', WithDecryption: true }, (err, data) => {
-      if(err) {
-        return err
-      } else {
-        return data
-      }
-    }).promise()
+const getParam = async () => {
+  const params = {
+    Name: 'RDSDev',
+    WithDecryption: true
+  }
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify(secret)
-    }
-  } catch (e) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify(e)
-    }
+  const fetchedParameter = await ssm.getParameter(params).promise()
+  return fetchedParameter.Parameter.Value
+}
+
+const controller = async (event, context) => {
+  const value = await getParam()
+  return {
+    statusCode: 200,
+    body: JSON.stringify(value)
   }
 }
 

@@ -20,6 +20,8 @@ const logger = require('../lib/logger')
 
 let config;
 
+
+
 module.exports = async parameter => {
   if(config) {
     logger.info('[secrets-loader] - Returning cached config')
