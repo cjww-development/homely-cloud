@@ -20,11 +20,11 @@ const ssm = new AWS.SSM({ region: 'eu-west-2' })
 
 const getParam = async () => {
   const params = {
-    Name: '/Dev/RDS',
+    Names: ['/Dev/RDS'],
     WithDecryption: true
   }
 
-  const fetchedParameter = await ssm.getParameter(params).promise()
+  const fetchedParameter = await ssm.getParameters(params).promise()
   return fetchedParameter.Parameter.Value
 }
 
