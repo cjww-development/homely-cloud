@@ -33,7 +33,10 @@ const controller = async (event, context) => {
       body: JSON.stringify(secret)
     }
   } catch (e) {
-
+    return {
+      statusCode: 500,
+      body: JSON.stringify(e)
+    }
   }
 }
 
