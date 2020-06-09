@@ -20,7 +20,7 @@ const ssm = new AWS.SSM({ region: 'eu-west-2' })
 
 const getParam = async () => {
   const params = {
-    Name: 'RDSDev',
+    Name: '/Dev/RDS',
     WithDecryption: true
   }
 
