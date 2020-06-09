@@ -16,7 +16,7 @@
 
 const middleware = require('../middleware')
 const AWS = require('aws-sdk')
-const ssm = AWS.SSM({ region: 'eu-west-2' })
+const ssm = new AWS.SSM({ region: 'eu-west-2' })
 
 const controller = async (event, context) => {
   return ssm.getParameter({ Name: 'RDSDev', WithDecryption: true }).send((err, data) => {
