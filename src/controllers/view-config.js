@@ -21,6 +21,10 @@ const ssm = new AWS.SSM({ region: 'eu-west-2' })
 const controller = async (event, context) => {
   return ssm.getParameter({ Name: 'RDSDev', WithDecryption: true }).send((err, data) => {
     console.log(JSON.stringify(data))
+    return {
+      statusCode: 200,
+      body: JSON.stringify(data)
+    }
   })
 }
 
