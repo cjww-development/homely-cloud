@@ -15,19 +15,13 @@
  */
 
 const middleware = require('../middleware')
-const pingService = require('../services/db-ping')
+const AWS = require('aws-sdk')
+const ssm = AWS.SSM({ region: 'eu-west-2' })
 
 const controller = async (event, context) => {
-  try {
-    const result = await pingService.pingDb()
-    console.log(result)
-    return {
-      statusCode: 200,
-      body: result
-    }
-  } catch (e) {
-    throw e
-  }
+  return ssm.getParameter({ Name: 'RDSDev', WithDecryption: true }).send((err, data) => {
+    console.log(JSON.stringify(data))
+  })
 }
 
 exports.controller = middleware.run(controller, {  })
