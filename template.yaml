@@ -27,7 +27,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./dist
-      Handler: dist/controllers/view-config.controller
+      Handler: src/controllers/view-config.controller
       Runtime: nodejs12.x
       Timeout: 900
       Environment:
@@ -52,7 +52,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./dist
-      Handler: dist/controllers/server-registration.controller
+      Handler: src/controllers/server-registration.controller
       Runtime: nodejs12.x
       Timeout: 900
       Environment:
@@ -77,7 +77,7 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       CodeUri: ./dist
-      Handler: dist/controllers/pair-server.controller
+      Handler: src/controllers/pair-server.controller
       Runtime: nodejs12.x
       Timeout: 900
       Environment:
