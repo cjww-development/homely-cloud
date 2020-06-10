@@ -16,24 +16,25 @@
 
 import { runMiddleware } from '../middleware'
 import AWS from 'aws-sdk'
-import {APIGatewayProxyEvent, APIGatewayProxyResult} from 'aws-lambda'
+import { APIGatewayProxyEvent } from 'aws-lambda'
 
 const ssm: AWS.SSM = new AWS.SSM({ region: 'eu-west-2' })
 
-// const getParam = async () => {
-//   const params = {
-//     Names: ['/Dev/RDS'],
-//     WithDecryption: true
-//   }
-//
-//   const fetchedParameter = await ssm.getParameters(params).promise()
-//   return fetchedParameter.Parameters.map(param => param.Value)
-// }
+const getParam = async () => {
+  const params = {
+    Name: '/Dev/RDS',
+    WithDecryption: true
+  }
 
-const controller = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  const fetchedParameter = await ssm.getParameter(params).promise()
+  return JSON.parse(`${fetchedParameter.Parameter?.Value}`)
+}
+
+const controller = async (event: APIGatewayProxyEvent): Promise<any> => {
+  const params = await getParam()
   return {
     statusCode: 200,
-    body: 'Hello from config'
+    body: params
   }
 }
 

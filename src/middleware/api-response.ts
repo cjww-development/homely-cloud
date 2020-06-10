@@ -22,6 +22,9 @@ export const apiResponse = () => {
     after: (handler: any, next: any) => {
       handler.response = {
         statusCode: handler.response.statusCode,
+        headers: {
+          'Content-Type': 'application/json'
+        },
         body: JSON.stringify(buildResponse(handler.event, handler.context, handler.response))
       }
       next()
