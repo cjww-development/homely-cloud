@@ -17,7 +17,7 @@ jobs:
         with:
           cmd: install
       - name: Build backend
-        - run: yarn run build
+        run: yarn run build
 #      - name: Run unit tests
 #        uses: borales/actions-yarn@v2.0.0
 #        with:
