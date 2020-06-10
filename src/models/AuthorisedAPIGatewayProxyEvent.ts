@@ -14,27 +14,17 @@
  * limitations under the License.
  */
 
-const middleware = require('../middleware')
-const registrationService = require('../services/servers')
-
-const inputSchema = {
-  type: 'object',
-  properties: {
-    body: {
-      type: 'object',
-      required: ['externalIP'],
-      properties: {
-        externalIP: {
-          type: 'string'
-        }
-      }
-    }
-  }
+export interface AuthorisedAPIGatewayProxyEvent {
+  body: string | null
+  headers: { [name: string]: string }
+  multiValueHeaders: { [name: string]: string[] }
+  httpMethod: string
+  isBase64Encoded: boolean
+  path: string
+  pathParameters: { [name: string]: string } | null
+  queryStringParameters: { [name: string]: string } | null
+  multiValueQueryStringParameters: { [name: string]: string[] } | null
+  stageVariables: { [name: string]: string } | null
+  resource: string
+  auth: any
 }
-
-const controller = async (event, context) => {
-  const { cognitoUsername } = event.auth
-  return registrationService.pairHome(event.body, cognitoUsername)
-}
-
-exports.controller = middleware.run(controller, inputSchema, true)

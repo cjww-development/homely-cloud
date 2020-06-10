@@ -14,7 +14,10 @@
  * limitations under the License.
  */
 
-const middleware = require('../middleware')
+import { runMiddleware } from '../middleware'
+import {APIGatewayProxyResult, Context} from 'aws-lambda'
+import { APIGatewayProxyEvent } from 'aws-lambda/trigger/api-gateway-proxy'
+
 const registrationService = require('../services/servers')
 
 const inputSchema = {
@@ -35,8 +38,8 @@ const inputSchema = {
   }
 }
 
-const controller = async (event, context) => {
+const controller = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   return registrationService.registerOnPremiseServer(event.body)
 }
 
-exports.controller = middleware.run(controller, inputSchema)
+exports.controller = runMiddleware(controller, inputSchema)

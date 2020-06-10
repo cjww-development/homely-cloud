@@ -14,26 +14,11 @@
  * limitations under the License.
  */
 
-const middleware = require('../middleware')
-const AWS = require('aws-sdk')
-const ssm = new AWS.SSM({ region: 'eu-west-2' })
+import mysql from '../database/mysql'
+import { logger } from '../lib/logger'
 
-const getParam = async () => {
-  const params = {
-    Names: ['/Dev/RDS'],
-    WithDecryption: true
-  }
-
-  const fetchedParameter = await ssm.getParameters(params).promise()
-  return fetchedParameter.Parameter.Value
+export const pingDb = async () => {
+  logger.info('[ping-db] - Testing DB connection')
+  const result: Promise<any> = await mysql.query('select now()')
+  return result
 }
-
-const controller = async (event, context) => {
-  const value = await getParam()
-  return {
-    statusCode: 200,
-    body: JSON.stringify(value)
-  }
-}
-
-exports.controller = middleware.run(controller, {  })

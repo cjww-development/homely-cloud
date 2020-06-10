@@ -14,12 +14,11 @@
  * limitations under the License.
  */
 
-const winston = require('winston')
+import winston from 'winston'
+
 const consoleTransport = new winston.transports.Console()
 const myWinstonOptions = {
   transports: [consoleTransport]
 }
 
-const logger = new winston.createLogger(myWinstonOptions)
-
-module.exports = logger
+export const logger: winston.Logger = winston.createLogger(myWinstonOptions)

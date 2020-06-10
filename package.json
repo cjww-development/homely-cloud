@@ -11,6 +11,9 @@
     "@middy/http-error-handler": "^1.0.0",
     "@middy/http-json-body-parser": "^1.0.0",
     "@middy/validator": "^1.0.0",
+    "@types/aws-lambda": "^8.10.55",
+    "@types/jsonwebtoken": "^8.5.0",
+    "@types/node": "^14.0.13",
     "aws-sdk": "^2.689.0",
     "axios": "^0.18.0",
     "date-fns": "^2.14.0",
@@ -19,10 +22,12 @@
     "jsonwebtoken": "^8.5.1",
     "mysql": "^2.18.1",
     "serverless-mysql": "^1.5.4",
+    "typescript": "^3.9.5",
     "winston": "^3.2.1"
   },
   "scripts": {
-    "start": "NODE_ENV=local sam local start-api -t template.yaml --skip-pull-image",
+    "start": "yarn build && sam local start-api -t template.yaml --skip-pull-image",
+    "build": "tsc",
     "test": "jest --verbose false --runInBand",
     "build-db": "NODE_ENV=local node node_modules/db-migrate/bin/db-migrate up",
     "teardown-db": "NODE_ENV=local node node_modules/db-migrate/bin/db-migrate down"

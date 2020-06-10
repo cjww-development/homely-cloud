@@ -14,21 +14,22 @@
  * limitations under the License.
  */
 
-const AWS = require('aws-sdk')
-const ssm = new AWS.SSM({ region: 'eu-west-2' })
-const logger = require('../lib/logger')
+import {AWSError} from "aws-sdk";
+import {GetParameterResult} from "aws-sdk/clients/ssm";
+import AWS from 'aws-sdk'
+import { logger } from './logger'
 
-let config;
+const ssm: AWS.SSM = new AWS.SSM({ region: 'eu-west-2' })
 
+let config: any;
 
-
-module.exports = async parameter => {
+export const getParameter = async (parameter: string): Promise<any> => {
   if(config) {
     logger.info('[secrets-loader] - Returning cached config')
     return config
   }
   logger.info('[secrets-loader] - Fetching config from ssm')
-  return ssm.getParameter({ Name: parameter, WithDecryption: true }, (err, data) => {
+  return ssm.getParameter({ Name: parameter, WithDecryption: true }, (err: AWSError, data: GetParameterResult) => {
     if(err) {
       console.log(err, err.stack)
       return config

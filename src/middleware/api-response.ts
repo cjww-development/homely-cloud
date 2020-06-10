@@ -14,34 +14,17 @@
  * limitations under the License.
  */
 
-const { formatISO } = require('date-fns')
 
-const build = (response, event, context) => {
+import { buildResponse } from '../models/ApiResponse'
+
+export const apiResponse = () => {
   return {
-    statusCode: response.statusCode,
-    body: JSON.stringify({
-      uri: event.resource,
-      method: event.httpMethod,
-      status: response.statusCode,
-      body: response.body,
-      stats: {
-        requestCompletedAt: formatISO(Date.now()),
-        requestId: context.awsRequestId
+    after: (handler: any, next: any) => {
+      handler.response = {
+        statusCode: handler.response.statusCode,
+        body: JSON.stringify(buildResponse(handler.event, handler.context, handler.response))
       }
-    })
-  }
-}
-
-const apiResponse = () => {
-  return {
-    after: (handler, next) => {
-      handler.response = build(handler.response, handler.event, handler.context)
       next()
     }
   }
-}
-
-module.exports = {
-  apiResponse,
-  build
 }

@@ -14,10 +14,10 @@
  * limitations under the License.
  */
 
-const mysql = require('../database/mysql')
-const logger = require('../lib/logger')
+import mysql from '../database/mysql'
+import { logger } from '../lib/logger'
 
-const registerOnPremiseServer = async (server) => {
+const registerOnPremiseServer = async (server: any) => {
   const { externalIP, internalIP } = server
   const found = await isServerRegistered(externalIP)
   if(found) {
@@ -33,7 +33,7 @@ const registerOnPremiseServer = async (server) => {
   }
 }
 
-const pairHome = async (server, userName) => {
+const pairHome = async (server: any, userName: string) => {
   const { externalIP } = server
   const found = await isServerRegistered(externalIP)
   if(found) {
@@ -50,7 +50,7 @@ const pairHome = async (server, userName) => {
   }
 }
 
-const isServerRegistered = async (ip) => {
+const isServerRegistered = async (ip: string) => {
   logger.info('[isServerRegistered] - Finding servers existence')
   const query = mysql.format(`select * from registered_services where external_ip = ?`, [ip])
   const result = await mysql.query(query)
@@ -58,7 +58,7 @@ const isServerRegistered = async (ip) => {
   return result.length > 0
 }
 
-const updateServiceRecordWith = async (externalIP, key, value) => {
+const updateServiceRecordWith = async (externalIP: string, key: string, value: string) => {
   logger.info(`[updateServiceRecordWith] - Update service record with ${key}`)
   const query = mysql.format(
     `update registered_services set ${key} = ? where external_ip = ?`,
@@ -67,7 +67,7 @@ const updateServiceRecordWith = async (externalIP, key, value) => {
   await mysql.query(query)
 }
 
-const createServiceRecord = async (externalIP, internalIP, owner) => {
+const createServiceRecord = async (externalIP: string, internalIP: string, owner: string) => {
   logger.info('[createServiceRecord] - Creating new service record')
   const query = mysql.format(
     'insert into registered_services (external_ip, internal_ip, owner) values (?, ?, ?)',
@@ -76,7 +76,7 @@ const createServiceRecord = async (externalIP, internalIP, owner) => {
   await mysql.query(query)
 }
 
-const getServiceRecord = async (externalIP) => {
+const getServiceRecord = async (externalIP: string) => {
   logger.info(`[getServiceRecord] - Fetching service record`)
   const query = mysql.format(
     'select * from registered_services where external_ip = ?',

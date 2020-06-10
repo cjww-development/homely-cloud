@@ -14,22 +14,20 @@
  * limitations under the License.
  */
 
-const middy = require('@middy/core')
-const jsonBodyParser = require('@middy/http-json-body-parser')
-const httpErrorHandler = require('@middy/http-error-handler')
-const validator = require('@middy/validator')
-const eventLoop = require('@middy/do-not-wait-for-empty-event-loop')
-const { apiResponse } = require('./api-response')
-const { authenticatedUser } = require('./authenticated-user')
+import middy from '@middy/core'
+import jsonBodyParser from '@middy/http-json-body-parser'
+import httpErrorHandler from '@middy/http-error-handler'
+import validator from '@middy/validator'
+import doNotWaitForEmptyEventLoop from '@middy/do-not-wait-for-empty-event-loop'
+import { apiResponse } from './api-response'
+import { authenticatedUser } from './authenticated-user'
 
-const runMiddleware = (controller, inputSchema, requiresAuth = false) => {
+export const runMiddleware = (controller: any, inputSchema: any, requiresAuth: boolean = false) => {
   return middy(controller)
-    .use(eventLoop())
+    .use(doNotWaitForEmptyEventLoop())
     .use(jsonBodyParser())
     .use(validator({ inputSchema }))
     .use(apiResponse())
     .use(httpErrorHandler())
     .use(authenticatedUser(requiresAuth))
 }
-
-exports.run = runMiddleware

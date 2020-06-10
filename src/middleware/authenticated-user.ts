@@ -14,11 +14,12 @@
  * limitations under the License.
  */
 
-const jwt = require('jsonwebtoken');
-const logger = require('../lib/logger')
-const apiResponse = require('./api-response')
+import { APIGatewayEvent, APIGatewayProxyResult } from 'aws-lambda'
+import jwt from 'jsonwebtoken'
+import { logger } from '../lib/logger'
+import { buildResponse } from '../models/ApiResponse'
 
-const getEventAuth = event => {
+const getEventAuth = (event: APIGatewayEvent) => {
   if (!event || !event.headers) {
     logger.warn('[getEventAuth] - Request contains no headers')
     return null;
@@ -30,7 +31,7 @@ const getEventAuth = event => {
     return null;
   }
 
-  const token = jwt.decode(authHeader.replace('Bearer ', ''));
+  const token: any = jwt.decode(authHeader.replace('Bearer ', ''));
   if (token === null) {
     logger.warn('[getEventAuth] - There was a problem decoding the Authorisation token')
     return null;
@@ -44,14 +45,14 @@ const getEventAuth = event => {
   };
 };
 
-const authenticatedUser = (requiresAuth) => {
-  const errorResponse = { statusCode: 403, body: { message: 'Not authenticated' } }
+export const authenticatedUser = (requiresAuth: boolean) => {
+  const errorResponse: APIGatewayProxyResult = { statusCode: 403, body: JSON.stringify({ message: 'Not authenticated' }) }
   return {
-    before: (handler, next) => {
+    before: (handler: any, next: any) => {
       if(requiresAuth) {
         const auth = getEventAuth(handler.event);
         if (!auth) {
-          const response = apiResponse.build(errorResponse, handler.event, handler.context)
+          const response = buildResponse(handler.event, handler.context, errorResponse)
           handler.callback(null, response)
         }
         handler.event.auth = auth;
@@ -60,6 +61,3 @@ const authenticatedUser = (requiresAuth) => {
     }
   }
 }
-
-module.exports = { authenticatedUser };
-

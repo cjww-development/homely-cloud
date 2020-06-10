@@ -15,9 +15,9 @@
  */
 
 const dbConfig = require('../../../database.json')
-const logger = require('../../lib/logger')
-const mysql = require('mysql')
-const getParameter = require('../../lib/secrets-loader')
+import { logger } from '../../lib/logger'
+import mysql from 'mysql'
+import { getParameter } from '../../lib/secrets-loader'
 
 const serverlessMysql = require('serverless-mysql')({
   backoff: 'decorrelated',
@@ -27,6 +27,7 @@ const serverlessMysql = require('serverless-mysql')({
 
 const superQueryFunction = serverlessMysql.query.bind(serverlessMysql)
 const superConfigFunction = serverlessMysql.config.bind(serverlessMysql)
+
 let configLoaded = false
 
 const setConfiguration = async () => {
@@ -52,7 +53,7 @@ serverlessMysql.checkConnection = async () => {
   }
 }
 
-serverlessMysql.query = async (...args) => {
+serverlessMysql.query = async (...args: any[]) => {
   if (!configLoaded) {
     logger.debug('[query] - Configuration not found')
     await setConfiguration()
@@ -62,8 +63,8 @@ serverlessMysql.query = async (...args) => {
   return superQueryFunction(...args)
 };
 
-serverlessMysql.format = (...args) => {
-  return mysql.format(...args);
+serverlessMysql.format = (stmt: string, values: any[]) => {
+  return mysql.format(stmt, values);
 };
 
-module.exports = serverlessMysql
+export default serverlessMysql
