@@ -15,26 +15,14 @@
  */
 
 import { runMiddleware } from '../middleware'
-import AWS from 'aws-sdk'
 import { APIGatewayProxyEvent } from 'aws-lambda'
-
-const ssm: AWS.SSM = new AWS.SSM({ region: 'eu-west-2' })
-
-const getParam = async () => {
-  const params = {
-    Name: '/Dev/RDS',
-    WithDecryption: true
-  }
-
-  const fetchedParameter = await ssm.getParameter(params).promise()
-  return JSON.parse(`${fetchedParameter.Parameter?.Value}`)
-}
+import { pingDb } from '../services/db-ping'
 
 const controller = async (event: APIGatewayProxyEvent): Promise<any> => {
-  const params = await getParam()
+  const pinged = await pingDb()
   return {
     statusCode: 200,
-    body: params
+    body: pinged
   }
 }
 

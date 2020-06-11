@@ -21,23 +21,13 @@ import { logger } from './logger'
 
 const ssm: AWS.SSM = new AWS.SSM({ region: 'eu-west-2' })
 
-let config: any;
-
 export const getParameter = async (parameter: string): Promise<any> => {
-  if(config) {
-    logger.info('[secrets-loader] - Returning cached config')
-    return config
-  }
   logger.info('[secrets-loader] - Fetching config from ssm')
-  return ssm.getParameter({ Name: parameter, WithDecryption: true }, (err: AWSError, data: GetParameterResult) => {
-    if(err) {
-      console.log(err, err.stack)
-      return config
-    } else {
-      console.log(JSON.stringify(data))
-      console.log(data)
-      config = data
-      return config
-    }
-  })
+  const params = {
+    Name: parameter,
+    WithDecryption: true
+  }
+
+  const fetchedParameter = await ssm.getParameter(params).promise()
+  return JSON.parse(`${fetchedParameter.Parameter?.Value}`)
 }
