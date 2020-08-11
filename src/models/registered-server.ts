@@ -14,16 +14,9 @@
  * limitations under the License.
  */
 
-import { runMiddleware } from '../middleware'
-import { APIGatewayProxyEvent } from 'aws-lambda'
-import { pingDb } from '../services/db-ping'
-
-const controller = async (event: APIGatewayProxyEvent): Promise<any> => {
-  const pinged = await pingDb()
-  return {
-    statusCode: 200,
-    body: pinged
-  }
+export interface RegisteredServer {
+  externalIP: string
+  internalIP: string
+  owner?: string
+  createdAt: Date
 }
-
-exports.controller = runMiddleware(controller, {  })

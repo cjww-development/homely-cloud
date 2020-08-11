@@ -14,9 +14,6 @@
  * limitations under the License.
  */
 
-
-import { buildResponse } from '../models/ApiResponse'
-
 export const apiResponse = () => {
   return {
     after: (handler: any, next: any) => {
@@ -25,7 +22,7 @@ export const apiResponse = () => {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(buildResponse(handler.event, handler.context, handler.response))
+        body: JSON.stringify(handler.response.body)
       }
       next()
     }

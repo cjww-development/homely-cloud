@@ -1,27 +1,5 @@
 {
-  "defaultEnv": {
-    "ENV" : "NODE_ENV"
-  },
-
-  "local": {
-    "host": "172.17.0.1",
-    "driver": "mysql",
-    "user": "root",
-    "password": "root",
-    "database": "homely_cloud_local",
-    "timezone": "utc"
-  },
-
-  "local-setup": {
-    "host": "localhost",
-    "driver": "mysql",
-    "user": "root",
-    "password": "root",
-    "database": "homely_cloud_local",
-    "timezone": "utc"
-  },
-
-  "Dev": {
-    "sm": true
+  "dev": {
+    "registered-servers-col": "registered-servers-dev"
   }
 }

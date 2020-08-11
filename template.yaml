@@ -23,31 +23,6 @@ Resources:
           CognitoAuthorizer:
             UserPoolArn: !Sub '{{resolve:secretsmanager:${NodeEnv}HomelyCognitoArn:SecretString:${NodeEnv}HomelyCognitoArn}}'
 
-  ViewConfigFunction:
-    Type: AWS::Serverless::Function
-    Properties:
-      CodeUri: ./dist
-      Handler: src/controllers/view-config.controller
-      Runtime: nodejs12.x
-      Timeout: 900
-      Environment:
-        Variables:
-          NODE_ENV: !Ref 'NodeEnv'
-      VpcConfig:
-        SecurityGroupIds:
-          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSG:SecretString:HomelyCloudVPCSG}}"
-        SubnetIds:
-          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdA:SecretString:HomelyCloudVPCSubnetIdA}}"
-          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdB:SecretString:HomelyCloudVPCSubnetIdB}}"
-          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdC:SecretString:HomelyCloudVPCSubnetIdC}}"
-      Events:
-        ViewConfig:
-          Type: Api
-          Properties:
-            Path: /config
-            Method: get
-            RestApiId: !Ref 'HomelyCloudApiGateway'
-
   ServiceRegsitrationFunction:
     Type: AWS::Serverless::Function
     Properties:
@@ -58,13 +33,7 @@ Resources:
       Environment:
         Variables:
           NODE_ENV: !Ref 'NodeEnv'
-      VpcConfig:
-        SecurityGroupIds:
-          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSG:SecretString:HomelyCloudVPCSG}}"
-        SubnetIds:
-          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdA:SecretString:HomelyCloudVPCSubnetIdA}}"
-          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdB:SecretString:HomelyCloudVPCSubnetIdB}}"
-          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdC:SecretString:HomelyCloudVPCSubnetIdC}}"
+          SERVER_COLLECTION: !Ref 'ServerCollectionName'
       Events:
         ServiceRegistration:
           Type: Api
@@ -83,13 +52,6 @@ Resources:
       Environment:
         Variables:
           NODE_ENV: !Ref 'NodeEnv'
-      VpcConfig:
-        SecurityGroupIds:
-          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSG:SecretString:HomelyCloudVPCSG}}"
-        SubnetIds:
-          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdA:SecretString:HomelyCloudVPCSubnetIdA}}"
-          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdB:SecretString:HomelyCloudVPCSubnetIdB}}"
-          - !Sub "{{resolve:secretsmanager:HomelyCloudVPCSubnetIdC:SecretString:HomelyCloudVPCSubnetIdC}}"
       Events:
         HomeRegistration:
           Type: Api

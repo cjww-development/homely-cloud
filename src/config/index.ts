@@ -14,22 +14,10 @@
  * limitations under the License.
  */
 
-const testController = require('../../src/controllers/server-registration');
-const chai = require('chai');
-const expect = chai.expect;
-var event, context;
+const dbConfig = require('../../database.json')
 
-describe('Tests index', function () {
-  it('verifies successful response', async () => {
-    const result = await testController.controller(event, context)
+const config: any = {
+  registeredServersCollection: dbConfig[process.env.NODE_ENV || 'dev']['registered-servers-col']
+}
 
-    expect(result).to.be.an('object');
-    expect(result.statusCode).to.equal(200);
-    expect(result.body).to.be.an('string');
-
-    let response = JSON.parse(result.body);
-
-    expect(response).to.be.an('object');
-    expect(response.message).to.be.equal("Service registration");
-  });
-});
+export default config

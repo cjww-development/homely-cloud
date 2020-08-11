@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 
-import { runMiddleware } from '../middleware'
-import {APIGatewayProxyResult, Context} from 'aws-lambda'
-import { APIGatewayProxyEvent } from 'aws-lambda/trigger/api-gateway-proxy'
+import { runMiddleware } from '../../middleware'
+import { APIGatewayProxyResult, Context } from 'aws-lambda'
+import { AuthorisedAPIGatewayProxyEvent } from '../../models/AuthorisedAPIGatewayProxyEvent'
 
 const registrationService = require('../services/servers')
 
@@ -25,12 +25,9 @@ const inputSchema = {
   properties: {
     body: {
       type: 'object',
-      required: ['externalIP', 'internalIP'],
+      required: ['externalIP'],
       properties: {
         externalIP: {
-          type: 'string'
-        },
-        internalIP: {
           type: 'string'
         }
       }
@@ -38,8 +35,9 @@ const inputSchema = {
   }
 }
 
-const controller = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  return registrationService.registerOnPremiseServer(event.body)
+const controller = async (event: AuthorisedAPIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+  const { cognitoUsername } = event.auth
+  return registrationService.pairHome(event.body, cognitoUsername)
 }
 
-exports.controller = runMiddleware(controller, inputSchema)
+exports.controller = runMiddleware(controller, inputSchema, true)
